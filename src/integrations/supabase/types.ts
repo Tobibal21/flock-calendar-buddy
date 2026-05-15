@@ -14,7 +14,163 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      flocks: {
+        Row: {
+          bird_type: string
+          breed: string | null
+          created_at: string
+          current_count: number
+          date_acquired: string
+          id: string
+          initial_count: number
+          mortality_count: number
+          name: string
+          notes: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bird_type?: string
+          breed?: string | null
+          created_at?: string
+          current_count?: number
+          date_acquired?: string
+          id?: string
+          initial_count?: number
+          mortality_count?: number
+          name: string
+          notes?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bird_type?: string
+          breed?: string | null
+          created_at?: string
+          current_count?: number
+          date_acquired?: string
+          id?: string
+          initial_count?: number
+          mortality_count?: number
+          name?: string
+          notes?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      production_records: {
+        Row: {
+          broken_eggs: number
+          created_at: string
+          eggs_collected: number
+          feed_kg: number | null
+          flock_id: string | null
+          id: string
+          notes: string | null
+          record_date: string
+          user_id: string
+        }
+        Insert: {
+          broken_eggs?: number
+          created_at?: string
+          eggs_collected?: number
+          feed_kg?: number | null
+          flock_id?: string | null
+          id?: string
+          notes?: string | null
+          record_date?: string
+          user_id: string
+        }
+        Update: {
+          broken_eggs?: number
+          created_at?: string
+          eggs_collected?: number
+          feed_kg?: number | null
+          flock_id?: string | null
+          id?: string
+          notes?: string | null
+          record_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "production_records_flock_id_fkey"
+            columns: ["flock_id"]
+            isOneToOne: false
+            referencedRelation: "flocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          farm_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          farm_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          farm_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      vaccinations: {
+        Row: {
+          administered: boolean
+          administered_date: string | null
+          created_at: string
+          flock_id: string | null
+          id: string
+          notes: string | null
+          scheduled_date: string
+          user_id: string
+          vaccine_name: string
+        }
+        Insert: {
+          administered?: boolean
+          administered_date?: string | null
+          created_at?: string
+          flock_id?: string | null
+          id?: string
+          notes?: string | null
+          scheduled_date: string
+          user_id: string
+          vaccine_name: string
+        }
+        Update: {
+          administered?: boolean
+          administered_date?: string | null
+          created_at?: string
+          flock_id?: string | null
+          id?: string
+          notes?: string | null
+          scheduled_date?: string
+          user_id?: string
+          vaccine_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vaccinations_flock_id_fkey"
+            columns: ["flock_id"]
+            isOneToOne: false
+            referencedRelation: "flocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
