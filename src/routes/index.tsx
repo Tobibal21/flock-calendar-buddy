@@ -33,7 +33,7 @@ function Landing() {
             Run your poultry farm with calm, clear records.
           </h1>
           <p className="mt-5 text-lg text-muted-foreground max-w-2xl">
-            Track flocks, log daily crate production, see your trends, and never miss a vaccine.
+            Track flocks, log daily egg production, see your trends, and never miss a vaccine.
             Built for layer, broiler, and mixed farms of every size.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -47,7 +47,7 @@ function Landing() {
         <div className="mt-20 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {[
             { icon: ClipboardList, t: "Flock register", d: "Breed, count, age, mortality — kept tidy per house." },
-            { icon: Egg, t: "Daily crate tracker", d: "Two taps to log today's collection and broken crates." },
+            { icon: Egg, t: "Daily egg tracker", d: "Two taps to log today's collection and broken eggs." },
             { icon: TrendingUp, t: "Production trends", d: "Charts that show how your flock is really doing." },
             { icon: Syringe, t: "Vaccine reminders", d: "Schedule and export to Google Calendar in one click." },
           ].map(({ icon: Icon, t, d }) => (

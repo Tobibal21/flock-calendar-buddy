@@ -61,17 +61,17 @@ function Dashboard() {
       map.set(d, 0);
     }
     production?.forEach((r) => {
-      map.set(r.record_date, (map.get(r.record_date) ?? 0) + (r.crates_collected ?? 0));
+      map.set(r.record_date, (map.get(r.record_date) ?? 0) + (r.eggs_collected ?? 0));
     });
-    return Array.from(map.entries()).map(([date, crates]) => ({
+    return Array.from(map.entries()).map(([date, eggs]) => ({
       date: date.slice(5),
-      crates,
+      eggs,
     }));
   }, [production]);
 
-  const totalCrates30d = chartData.reduce((s, d) => s + d.crates, 0);
+  const totalEggs30d = chartData.reduce((s, d) => s + d.eggs, 0);
   const today = new Date().toISOString().slice(0, 10);
-  const todayCrates = production?.filter((r) => r.record_date === today).reduce((s, r) => s + r.crates_collected, 0) ?? 0;
+  const todayEggs = production?.filter((r) => r.record_date === today).reduce((s, r) => s + r.eggs_collected, 0) ?? 0;
 
   return (
     <>
@@ -80,7 +80,7 @@ function Dashboard() {
         subtitle="A snapshot of your farm today."
         actions={
           <Link to="/production">
-            <Button>Log today's crates</Button>
+            <Button>Log today's eggs</Button>
           </Link>
         }
       />
@@ -88,15 +88,15 @@ function Dashboard() {
       <div className="px-6 md:px-10 py-6 space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Stat icon={Bird} label="Birds" value={totalBirds.toLocaleString()} hint={`${totalFlocks} flock${totalFlocks === 1 ? "" : "s"}`} />
-          <Stat icon={Egg} label="Crates today" value={todayCrates.toLocaleString()} />
-          <Stat icon={TrendingUp} label="Crates (30 days)" value={totalCrates30d.toLocaleString()} />
+          <Stat icon={Egg} label="Eggs today" value={todayEggs.toLocaleString()} />
+          <Stat icon={TrendingUp} label="Eggs (30 days)" value={totalEggs30d.toLocaleString()} />
           <Stat icon={Syringe} label="Upcoming vaccines" value={(upcomingVacc?.length ?? 0).toString()} />
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="flex items-baseline justify-between">
             <div>
-              <h2 className="font-semibold">Crate production trend</h2>
+              <h2 className="font-semibold">Egg production trend</h2>
               <p className="text-sm text-muted-foreground">Last 30 days</p>
             </div>
           </div>
@@ -120,7 +120,7 @@ function Dashboard() {
                     fontSize: 12,
                   }}
                 />
-                <Area type="monotone" dataKey="crates" stroke="var(--color-primary)" strokeWidth={2} fill="url(#eggGrad)" />
+                <Area type="monotone" dataKey="eggs" stroke="var(--color-primary)" strokeWidth={2} fill="url(#eggGrad)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>

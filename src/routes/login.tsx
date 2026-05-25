@@ -88,7 +88,7 @@ function LoginPage() {
             Quiet records for a busy farm.
           </h2>
           <p className="mt-3 text-primary-foreground/80 max-w-md">
-            Log crates in seconds. Watch your trends. Stay on top of every vaccine.
+            Log eggs in seconds. Watch your trends. Stay on top of every vaccine.
           </p>
         </div>
         <p className="text-sm text-primary-foreground/70">© {new Date().getFullYear()} Coopkeeper</p>
