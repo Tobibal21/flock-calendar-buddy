@@ -61,9 +61,11 @@ export type Database = {
       }
       production_records: {
         Row: {
-          broken_eggs: number
+          amount_sold: number
+          broken_crates: number
+          crates_collected: number
+          crates_sold: number
           created_at: string
-          eggs_collected: number
           feed_kg: number | null
           flock_id: string | null
           id: string
@@ -72,9 +74,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          broken_eggs?: number
+          amount_sold?: number
+          broken_crates?: number
+          crates_collected?: number
+          crates_sold?: number
           created_at?: string
-          eggs_collected?: number
           feed_kg?: number | null
           flock_id?: string | null
           id?: string
@@ -83,9 +87,11 @@ export type Database = {
           user_id: string
         }
         Update: {
-          broken_eggs?: number
+          amount_sold?: number
+          broken_crates?: number
+          crates_collected?: number
+          crates_sold?: number
           created_at?: string
-          eggs_collected?: number
           feed_kg?: number | null
           flock_id?: string | null
           id?: string
