@@ -106,7 +106,7 @@ function ProductionPage() {
               <p className="text-xs text-muted-foreground">crates collected</p>
               <div className="mt-3 flex justify-between text-sm">
                 <span><span className="font-semibold">{t.sold.toLocaleString()}</span> <span className="text-muted-foreground">sold</span></span>
-                <span className="font-semibold">{t.amount.toLocaleString(undefined, { style: "currency", currency: "USD" })}</span>
+                <span className="font-semibold">{t.amount.toLocaleString("en-NG", { style: "currency", currency: "NGN" })}</span>
               </div>
             </div>
           ))}
