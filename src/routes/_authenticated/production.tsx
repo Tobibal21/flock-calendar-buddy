@@ -106,7 +106,7 @@ function ProductionPage() {
               <p className="text-xs text-muted-foreground">crates collected</p>
               <div className="mt-3 flex justify-between text-sm">
                 <span><span className="font-semibold">{t.sold.toLocaleString()}</span> <span className="text-muted-foreground">sold</span></span>
-                <span className="font-semibold">{t.amount.toLocaleString(undefined, { style: "currency", currency: "USD" })}</span>
+                <span className="font-semibold">{t.amount.toLocaleString("en-NG", { style: "currency", currency: "NGN" })}</span>
               </div>
             </div>
           ))}
@@ -158,7 +158,7 @@ function ProductionPage() {
               <Input type="number" name="crates_sold" min={0} defaultValue="0" />
             </div>
             <div className="space-y-1.5">
-              <Label>Amount sold</Label>
+              <Label>Amount sold (₦)</Label>
               <Input type="number" name="amount_sold" min={0} step="0.01" defaultValue="0" />
             </div>
             <div className="space-y-1.5">
@@ -186,7 +186,7 @@ function ProductionPage() {
                   <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
                     <span><span className="font-semibold">{r.eggs_collected}</span> <span className="text-muted-foreground">crates</span></span>
                     {(r as any).crates_sold > 0 && <span><span className="font-semibold">{(r as any).crates_sold}</span> <span className="text-muted-foreground">sold</span></span>}
-                    {Number((r as any).amount_sold) > 0 && <span><span className="font-semibold">{Number((r as any).amount_sold).toLocaleString(undefined, { style: "currency", currency: "USD" })}</span></span>}
+                    {Number((r as any).amount_sold) > 0 && <span><span className="font-semibold">{Number((r as any).amount_sold).toLocaleString("en-NG", { style: "currency", currency: "NGN" })}</span></span>}
                     {r.broken_eggs > 0 && <span><span className="font-semibold">{r.broken_eggs}</span> <span className="text-muted-foreground">broken</span></span>}
                   </div>
                 </div>
