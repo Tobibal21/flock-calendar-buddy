@@ -158,7 +158,7 @@ function ProductionPage() {
               <Input type="number" name="crates_sold" min={0} defaultValue="0" />
             </div>
             <div className="space-y-1.5">
-              <Label>Amount sold</Label>
+              <Label>Amount sold (₦)</Label>
               <Input type="number" name="amount_sold" min={0} step="0.01" defaultValue="0" />
             </div>
             <div className="space-y-1.5">
