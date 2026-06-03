@@ -61,7 +61,9 @@ export type Database = {
       }
       production_records: {
         Row: {
+          amount_sold: number
           broken_eggs: number
+          crates_sold: number
           created_at: string
           eggs_collected: number
           feed_kg: number | null
@@ -72,7 +74,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          amount_sold?: number
           broken_eggs?: number
+          crates_sold?: number
           created_at?: string
           eggs_collected?: number
           feed_kg?: number | null
@@ -83,7 +87,9 @@ export type Database = {
           user_id: string
         }
         Update: {
+          amount_sold?: number
           broken_eggs?: number
+          crates_sold?: number
           created_at?: string
           eggs_collected?: number
           feed_kg?: number | null
