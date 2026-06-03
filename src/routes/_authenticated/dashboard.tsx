@@ -88,15 +88,15 @@ function Dashboard() {
       <div className="px-6 md:px-10 py-6 space-y-6">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Stat icon={Bird} label="Birds" value={totalBirds.toLocaleString()} hint={`${totalFlocks} flock${totalFlocks === 1 ? "" : "s"}`} />
-          <Stat icon={Egg} label="Eggs today" value={todayEggs.toLocaleString()} />
-          <Stat icon={TrendingUp} label="Eggs (30 days)" value={totalEggs30d.toLocaleString()} />
+          <Stat icon={Egg} label="Crates today" value={todayEggs.toLocaleString()} />
+          <Stat icon={TrendingUp} label="Crates (30 days)" value={totalEggs30d.toLocaleString()} />
           <Stat icon={Syringe} label="Upcoming vaccines" value={(upcomingVacc?.length ?? 0).toString()} />
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="flex items-baseline justify-between">
             <div>
-              <h2 className="font-semibold">Egg production trend</h2>
+              <h2 className="font-semibold">Crate production trend</h2>
               <p className="text-sm text-muted-foreground">Last 30 days</p>
             </div>
           </div>
