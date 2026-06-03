@@ -66,13 +66,13 @@ function Dashboard() {
     });
     return Array.from(map.entries()).map(([date, eggs]) => ({
       date: date.slice(5),
-      eggs,
+      eggs: eggsAsCrateDecimal(eggs),
     }));
   }, [production]);
 
-  const totalEggs30d = chartData.reduce((s, d) => s + d.eggs, 0);
+  const totalEggs30d = production?.reduce((s, r) => s + (r.eggs_collected ?? 0), 0) ?? 0;
   const today = new Date().toISOString().slice(0, 10);
-  const todayEggs = production?.filter((r) => r.record_date === today).reduce((s, r) => s + r.eggs_collected, 0) ?? 0;
+  const todayEggs = production?.filter((r) => r.record_date === today).reduce((s, r) => s + (r.eggs_collected ?? 0), 0) ?? 0;
 
   return (
     <>
