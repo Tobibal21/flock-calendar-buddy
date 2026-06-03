@@ -6,6 +6,7 @@ import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YA
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
+import { eggsAsCrateDecimal, formatCrates } from "@/lib/eggs";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
