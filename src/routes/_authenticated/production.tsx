@@ -186,7 +186,7 @@ function ProductionPage() {
                   <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm">
                     <span><span className="font-semibold">{r.eggs_collected}</span> <span className="text-muted-foreground">crates</span></span>
                     {(r as any).crates_sold > 0 && <span><span className="font-semibold">{(r as any).crates_sold}</span> <span className="text-muted-foreground">sold</span></span>}
-                    {Number((r as any).amount_sold) > 0 && <span><span className="font-semibold">{Number((r as any).amount_sold).toLocaleString(undefined, { style: "currency", currency: "USD" })}</span></span>}
+                    {Number((r as any).amount_sold) > 0 && <span><span className="font-semibold">{Number((r as any).amount_sold).toLocaleString("en-NG", { style: "currency", currency: "NGN" })}</span></span>}
                     {r.broken_eggs > 0 && <span><span className="font-semibold">{r.broken_eggs}</span> <span className="text-muted-foreground">broken</span></span>}
                   </div>
                 </div>
