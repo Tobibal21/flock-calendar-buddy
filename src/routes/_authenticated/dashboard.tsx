@@ -96,7 +96,7 @@ function Dashboard() {
         <div className="rounded-2xl border border-border bg-card p-6">
           <div className="flex items-baseline justify-between">
             <div>
-              <h2 className="font-semibold">Egg production trend</h2>
+              <h2 className="font-semibold">Crate production trend</h2>
               <p className="text-sm text-muted-foreground">Last 30 days</p>
             </div>
           </div>
