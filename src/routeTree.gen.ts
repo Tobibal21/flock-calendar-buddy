@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedVaccinesRouteImport } from './routes/_authenticated/vaccines'
 import { Route as AuthenticatedProductionRouteImport } from './routes/_authenticated/production'
 import { Route as AuthenticatedFlocksRouteImport } from './routes/_authenticated/flocks'
+import { Route as AuthenticatedFinanceRouteImport } from './routes/_authenticated/finance'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
 const LoginRoute = LoginRouteImport.update({
@@ -46,6 +47,11 @@ const AuthenticatedFlocksRoute = AuthenticatedFlocksRouteImport.update({
   path: '/flocks',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFinanceRoute = AuthenticatedFinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/finance': typeof AuthenticatedFinanceRoute
   '/flocks': typeof AuthenticatedFlocksRoute
   '/production': typeof AuthenticatedProductionRoute
   '/vaccines': typeof AuthenticatedVaccinesRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/finance': typeof AuthenticatedFinanceRoute
   '/flocks': typeof AuthenticatedFlocksRoute
   '/production': typeof AuthenticatedProductionRoute
   '/vaccines': typeof AuthenticatedVaccinesRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/finance': typeof AuthenticatedFinanceRoute
   '/_authenticated/flocks': typeof AuthenticatedFlocksRoute
   '/_authenticated/production': typeof AuthenticatedProductionRoute
   '/_authenticated/vaccines': typeof AuthenticatedVaccinesRoute
@@ -84,17 +93,26 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/finance'
     | '/flocks'
     | '/production'
     | '/vaccines'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/flocks' | '/production' | '/vaccines'
+  to:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/finance'
+    | '/flocks'
+    | '/production'
+    | '/vaccines'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/login'
     | '/_authenticated/dashboard'
+    | '/_authenticated/finance'
     | '/_authenticated/flocks'
     | '/_authenticated/production'
     | '/_authenticated/vaccines'
@@ -150,6 +168,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFlocksRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/finance': {
+      id: '/_authenticated/finance'
+      path: '/finance'
+      fullPath: '/finance'
+      preLoaderRoute: typeof AuthenticatedFinanceRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -162,6 +187,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFinanceRoute: typeof AuthenticatedFinanceRoute
   AuthenticatedFlocksRoute: typeof AuthenticatedFlocksRoute
   AuthenticatedProductionRoute: typeof AuthenticatedProductionRoute
   AuthenticatedVaccinesRoute: typeof AuthenticatedVaccinesRoute
@@ -169,6 +195,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFinanceRoute: AuthenticatedFinanceRoute,
   AuthenticatedFlocksRoute: AuthenticatedFlocksRoute,
   AuthenticatedProductionRoute: AuthenticatedProductionRoute,
   AuthenticatedVaccinesRoute: AuthenticatedVaccinesRoute,

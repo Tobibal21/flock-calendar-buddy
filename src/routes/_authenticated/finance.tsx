@@ -111,7 +111,7 @@ function FinancePage() {
   };
 
   const upsert = useMutation({
-    mutationFn: async ({ id, payload }: { id?: string; payload: Record<string, unknown> }) => {
+    mutationFn: async ({ id, payload }: { id?: string; payload: any }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
       if (id) {
