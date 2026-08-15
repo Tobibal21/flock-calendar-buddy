@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, LogOut } from "lucide-react";
+import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,7 @@ const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/flocks", label: "Flocks", icon: Bird },
   { to: "/production", label: "Production", icon: ClipboardList },
+  { to: "/finance", label: "Finance", icon: Wallet },
   { to: "/vaccines", label: "Vaccines", icon: Syringe },
 ] as const;
 
@@ -67,7 +68,7 @@ function AuthenticatedLayout() {
       </aside>
 
       {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-20 grid grid-cols-4 border-t border-border bg-sidebar md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-20 grid grid-cols-5 border-t border-border bg-sidebar md:hidden">
         {nav.map((item) => {
           const active = pathname.startsWith(item.to);
           return (
