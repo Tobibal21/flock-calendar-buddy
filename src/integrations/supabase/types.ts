@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      finance_records: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          flock_id: string | null
+          id: string
+          notes: string | null
+          record_date: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          flock_id?: string | null
+          id?: string
+          notes?: string | null
+          record_date?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          flock_id?: string | null
+          id?: string
+          notes?: string | null
+          record_date?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_records_flock_id_fkey"
+            columns: ["flock_id"]
+            isOneToOne: false
+            referencedRelation: "flocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       flocks: {
         Row: {
           bird_type: string
