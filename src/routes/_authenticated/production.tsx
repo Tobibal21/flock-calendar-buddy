@@ -11,6 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cratesInputToEggs, formatCrates, eggsAsCrateDecimal } from "@/lib/eggs";
+import { enqueue } from "@/lib/offline-queue";
+import { PendingSyncBadge } from "@/components/PendingSyncBadge";
+
 
 export const Route = createFileRoute("/_authenticated/production")({
   component: ProductionPage,
@@ -55,6 +58,10 @@ function ProductionPage() {
 
   const upsertRecord = useMutation({
     mutationFn: async ({ id, payload }: { id?: string; payload: any }) => {
+      if (!id && typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueue("production_records", payload);
+        return { queued: true };
+      }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
       if (id) {
@@ -64,8 +71,13 @@ function ProductionPage() {
         const { error } = await supabase.from("production_records").insert({ ...payload, user_id: user.id });
         if (error) throw error;
       }
+      return { queued: false };
     },
-    onSuccess: (_d, vars) => {
+    onSuccess: (res, vars) => {
+      if (res?.queued) {
+        toast.success("Saved offline — will sync when you're back online");
+        return;
+      }
       toast.success(vars.id ? "Updated" : "Logged");
       setEditing(null);
       qc.invalidateQueries({ queryKey: ["production"] });
@@ -73,6 +85,7 @@ function ProductionPage() {
     },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const deleteRecord = useMutation({
     mutationFn: async (id: string) => {
@@ -137,7 +150,12 @@ function ProductionPage() {
 
   return (
     <>
-      <PageHeader title="Daily production" subtitle="Log eggs in crates.pieces (e.g. 6.10 = 6 crates + 10 eggs), sales and feed." />
+      <PageHeader
+        title="Daily production"
+        subtitle="Log eggs in crates.pieces (e.g. 6.10 = 6 crates + 10 eggs), sales and feed."
+        actions={<PendingSyncBadge table="production_records" />}
+      />
+
 
       <div className="px-6 md:px-10 py-6 space-y-6">
         <div className="grid gap-4 sm:grid-cols-3">

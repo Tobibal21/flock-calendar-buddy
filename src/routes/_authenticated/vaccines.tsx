@@ -12,6 +12,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { buildIcs, downloadIcs, googleCalendarUrl } from "@/lib/ics";
+import { enqueue } from "@/lib/offline-queue";
+import { PendingSyncBadge } from "@/components/PendingSyncBadge";
+
 
 export const Route = createFileRoute("/_authenticated/vaccines")({
   component: VaccinesPage,
@@ -40,19 +43,29 @@ function VaccinesPage() {
 
   const addVacc = useMutation({
     mutationFn: async (payload: any) => {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueue("vaccinations", payload);
+        return { queued: true };
+      }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
       const { error } = await supabase.from("vaccinations").insert({ ...payload, user_id: user.id });
       if (error) throw error;
+      return { queued: false };
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
+      setOpen(false);
+      if (res?.queued) {
+        toast.success("Saved offline — will sync when you're back online");
+        return;
+      }
       toast.success("Vaccine scheduled");
       qc.invalidateQueries({ queryKey: ["vaccines"] });
       qc.invalidateQueries({ queryKey: ["vaccines-upcoming"] });
-      setOpen(false);
     },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const updateVacc = useMutation({
     mutationFn: async ({ id, ...patch }: any) => {
@@ -100,8 +113,10 @@ function VaccinesPage() {
         title="Vaccines"
         subtitle="Schedule reminders and add them to Google Calendar."
         actions={
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            <PendingSyncBadge table="vaccinations" />
             <Button variant="outline" onClick={exportAll}>
+
               <Download className="h-4 w-4" /> Export all (.ics)
             </Button>
             <Dialog open={open} onOpenChange={setOpen}>

@@ -12,6 +12,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { enqueue } from "@/lib/offline-queue";
+import { PendingSyncBadge } from "@/components/PendingSyncBadge";
+
 
 export const Route = createFileRoute("/_authenticated/finance")({
   component: FinancePage,
@@ -112,6 +115,10 @@ function FinancePage() {
 
   const upsert = useMutation({
     mutationFn: async ({ id, payload }: { id?: string; payload: any }) => {
+      if (!id && typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueue("finance_records", payload);
+        return { queued: true };
+      }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
       if (id) {
@@ -121,15 +128,21 @@ function FinancePage() {
         const { error } = await supabase.from("finance_records").insert({ ...payload, user_id: user.id } as never);
         if (error) throw error;
       }
+      return { queued: false };
     },
-    onSuccess: (_d, vars) => {
-      toast.success(vars.id ? "Entry updated" : "Entry logged");
+    onSuccess: (res, vars) => {
       setOpen(false);
       setEditing(null);
+      if (res?.queued) {
+        toast.success("Saved offline — will sync when you're back online");
+        return;
+      }
+      toast.success(vars.id ? "Entry updated" : "Entry logged");
       qc.invalidateQueries({ queryKey: ["finance"] });
     },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
@@ -203,7 +216,10 @@ function FinancePage() {
         title="Finance"
         subtitle="Track income and expenses to see your farm's profit or loss."
         actions={
+          <div className="flex items-center gap-2">
+          <PendingSyncBadge table="finance_records" />
           <Dialog
+
             open={open}
             onOpenChange={(o) => {
               setOpen(o);
@@ -283,7 +299,9 @@ function FinancePage() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         }
+
       />
 
       <div className="px-6 md:px-10 py-6 space-y-6">
