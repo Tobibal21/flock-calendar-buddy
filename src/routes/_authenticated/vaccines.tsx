@@ -113,8 +113,10 @@ function VaccinesPage() {
         title="Vaccines"
         subtitle="Schedule reminders and add them to Google Calendar."
         actions={
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            <PendingSyncBadge table="vaccinations" />
             <Button variant="outline" onClick={exportAll}>
+
               <Download className="h-4 w-4" /> Export all (.ics)
             </Button>
             <Dialog open={open} onOpenChange={setOpen}>
