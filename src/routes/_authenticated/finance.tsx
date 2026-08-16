@@ -216,7 +216,10 @@ function FinancePage() {
         title="Finance"
         subtitle="Track income and expenses to see your farm's profit or loss."
         actions={
+          <div className="flex items-center gap-2">
+          <PendingSyncBadge table="finance_records" />
           <Dialog
+
             open={open}
             onOpenChange={(o) => {
               setOpen(o);
