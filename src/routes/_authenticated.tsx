@@ -28,16 +28,39 @@ const nav = [
 function AuthenticatedLayout() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const online = useOnlineStatus();
+  const { pending } = usePendingSync();
+  useAutoSync();
 
   const signOut = async () => {
     await supabase.auth.signOut();
     navigate({ to: "/" });
   };
 
+  const showPill = !online || pending > 0;
+
   return (
     <div className="min-h-screen bg-background">
+      {showPill && (
+        <div
+          className={cn(
+            "fixed left-1/2 top-3 z-30 -translate-x-1/2 inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium shadow-sm",
+            online
+              ? "border-border bg-card text-muted-foreground"
+              : "border-destructive/40 bg-destructive/10 text-destructive",
+          )}
+        >
+          {online ? <Cloud className="h-3.5 w-3.5" /> : <CloudOff className="h-3.5 w-3.5" />}
+          {online
+            ? `Syncing ${pending} offline ${pending === 1 ? "entry" : "entries"}…`
+            : pending > 0
+              ? `Offline · ${pending} saved locally`
+              : "Offline · entries save locally"}
+        </div>
+      )}
       <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-border bg-sidebar px-4 py-5 md:flex md:flex-col">
         <Link to="/dashboard" className="flex items-center gap-2 px-2 font-semibold tracking-tight">
+
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
             <Egg className="h-4 w-4" />
           </span>
