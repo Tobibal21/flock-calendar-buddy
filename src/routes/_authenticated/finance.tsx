@@ -299,7 +299,9 @@ function FinancePage() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         }
+
       />
 
       <div className="px-6 md:px-10 py-6 space-y-6">
