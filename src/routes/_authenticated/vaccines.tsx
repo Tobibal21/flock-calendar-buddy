@@ -43,19 +43,29 @@ function VaccinesPage() {
 
   const addVacc = useMutation({
     mutationFn: async (payload: any) => {
+      if (typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueue("vaccinations", payload);
+        return { queued: true };
+      }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
       const { error } = await supabase.from("vaccinations").insert({ ...payload, user_id: user.id });
       if (error) throw error;
+      return { queued: false };
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
+      setOpen(false);
+      if (res?.queued) {
+        toast.success("Saved offline — will sync when you're back online");
+        return;
+      }
       toast.success("Vaccine scheduled");
       qc.invalidateQueries({ queryKey: ["vaccines"] });
       qc.invalidateQueries({ queryKey: ["vaccines-upcoming"] });
-      setOpen(false);
     },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const updateVacc = useMutation({
     mutationFn: async ({ id, ...patch }: any) => {

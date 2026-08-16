@@ -115,6 +115,10 @@ function FinancePage() {
 
   const upsert = useMutation({
     mutationFn: async ({ id, payload }: { id?: string; payload: any }) => {
+      if (!id && typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueue("finance_records", payload);
+        return { queued: true };
+      }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
       if (id) {
@@ -124,15 +128,21 @@ function FinancePage() {
         const { error } = await supabase.from("finance_records").insert({ ...payload, user_id: user.id } as never);
         if (error) throw error;
       }
+      return { queued: false };
     },
-    onSuccess: (_d, vars) => {
-      toast.success(vars.id ? "Entry updated" : "Entry logged");
+    onSuccess: (res, vars) => {
       setOpen(false);
       setEditing(null);
+      if (res?.queued) {
+        toast.success("Saved offline — will sync when you're back online");
+        return;
+      }
+      toast.success(vars.id ? "Entry updated" : "Entry logged");
       qc.invalidateQueries({ queryKey: ["finance"] });
     },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const remove = useMutation({
     mutationFn: async (id: string) => {
