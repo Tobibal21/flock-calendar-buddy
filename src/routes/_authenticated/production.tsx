@@ -150,7 +150,12 @@ function ProductionPage() {
 
   return (
     <>
-      <PageHeader title="Daily production" subtitle="Log eggs in crates.pieces (e.g. 6.10 = 6 crates + 10 eggs), sales and feed." />
+      <PageHeader
+        title="Daily production"
+        subtitle="Log eggs in crates.pieces (e.g. 6.10 = 6 crates + 10 eggs), sales and feed."
+        actions={<PendingSyncBadge table="production_records" />}
+      />
+
 
       <div className="px-6 md:px-10 py-6 space-y-6">
         <div className="grid gap-4 sm:grid-cols-3">
