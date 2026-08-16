@@ -55,6 +55,10 @@ function ProductionPage() {
 
   const upsertRecord = useMutation({
     mutationFn: async ({ id, payload }: { id?: string; payload: any }) => {
+      if (!id && typeof navigator !== "undefined" && !navigator.onLine) {
+        enqueue("production_records", payload);
+        return { queued: true };
+      }
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
       if (id) {
@@ -64,8 +68,13 @@ function ProductionPage() {
         const { error } = await supabase.from("production_records").insert({ ...payload, user_id: user.id });
         if (error) throw error;
       }
+      return { queued: false };
     },
-    onSuccess: (_d, vars) => {
+    onSuccess: (res, vars) => {
+      if (res?.queued) {
+        toast.success("Saved offline — will sync when you're back online");
+        return;
+      }
       toast.success(vars.id ? "Updated" : "Logged");
       setEditing(null);
       qc.invalidateQueries({ queryKey: ["production"] });
@@ -73,6 +82,7 @@ function ProductionPage() {
     },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const deleteRecord = useMutation({
     mutationFn: async (id: string) => {
