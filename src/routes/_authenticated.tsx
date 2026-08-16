@@ -1,8 +1,11 @@
 import { createFileRoute, redirect, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut } from "lucide-react";
+import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useAutoSync, usePendingSync } from "@/hooks/usePendingSync";
+
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async () => {
