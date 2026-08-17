@@ -11,6 +11,7 @@
  */
 import { createFileRoute } from "@tanstack/react-router";
 import { createHmac, timingSafeEqual } from "crypto";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 
 type PaystackEvent = {
   event: string;
@@ -71,7 +72,7 @@ export const Route = createFileRoute("/api/public/paystack-webhook")({
           return null;
         };
 
-        const update = async (patch: Record<string, unknown>) => {
+        const update = async (patch: TablesUpdate<"subscribers">) => {
           const uid = await target();
           if (!uid) {
             console.error("[paystack-webhook] no subscriber match for", payload.event);
