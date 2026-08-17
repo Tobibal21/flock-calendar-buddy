@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { paystackInitialize } from "@/lib/paystack.functions";
-import { fetchSubscriber, useSubscription, hasAccess } from "@/hooks/useSubscription";
+import { fetchSubscriber, useSubscription } from "@/hooks/useSubscription";
 
 type Search = { trxref?: string; reference?: string };
 
@@ -135,4 +135,3 @@ function SubscribePage() {
   );
 }
 
-export { hasAccess };
