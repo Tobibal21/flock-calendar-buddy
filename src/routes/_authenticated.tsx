@@ -1,17 +1,24 @@
 import { createFileRoute, redirect, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud } from "lucide-react";
+import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud, UserCog, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useAutoSync, usePendingSync } from "@/hooks/usePendingSync";
+import { fetchSubscriber, hasAccess, useSubscription } from "@/hooks/useSubscription";
 
 
 export const Route = createFileRoute("/_authenticated")({
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
       throw redirect({ to: "/login" });
+    }
+    // Subscription gate — /subscribe and /account stay reachable so users can pay or sign out.
+    if (location.pathname.startsWith("/subscribe") || location.pathname.startsWith("/account")) return;
+    const sub = await fetchSubscriber().catch(() => null);
+    if (!hasAccess(sub)) {
+      throw redirect({ to: "/subscribe" });
     }
   },
   component: AuthenticatedLayout,
@@ -24,6 +31,7 @@ const nav = [
   { to: "/finance", label: "Finance", icon: Wallet },
   { to: "/vaccines", label: "Vaccines", icon: Syringe },
 ] as const;
+
 
 function AuthenticatedLayout() {
   const navigate = useNavigate();
