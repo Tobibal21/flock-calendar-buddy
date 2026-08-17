@@ -39,6 +39,7 @@ function AuthenticatedLayout() {
   const online = useOnlineStatus();
   const { pending } = usePendingSync();
   useAutoSync();
+  const { subscription, trialDaysLeft } = useSubscription();
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -46,6 +47,11 @@ function AuthenticatedLayout() {
   };
 
   const showPill = !online || pending > 0;
+  const showTrialPill =
+    !showPill &&
+    subscription?.status === "trialing" &&
+    trialDaysLeft <= 2 &&
+    !pathname.startsWith("/subscribe");
 
   return (
     <div className="min-h-screen bg-background">
@@ -66,6 +72,18 @@ function AuthenticatedLayout() {
               : "Offline · entries save locally"}
         </div>
       )}
+      {showTrialPill && (
+        <Link
+          to="/subscribe"
+          className="fixed left-1/2 top-3 z-30 -translate-x-1/2 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3.5 py-1.5 text-xs font-medium text-primary shadow-sm"
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          {trialDaysLeft <= 0
+            ? "Trial ended — Subscribe"
+            : `Trial ends in ${trialDaysLeft} ${trialDaysLeft === 1 ? "day" : "days"} — Subscribe`}
+        </Link>
+      )}
+
       <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-border bg-sidebar px-4 py-5 md:flex md:flex-col">
         <Link to="/dashboard" className="flex items-center gap-2 px-2 font-semibold tracking-tight">
 
