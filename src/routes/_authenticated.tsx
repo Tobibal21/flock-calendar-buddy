@@ -1,17 +1,24 @@
 import { createFileRoute, redirect, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud } from "lucide-react";
+import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud, UserCog, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useAutoSync, usePendingSync } from "@/hooks/usePendingSync";
+import { fetchSubscriber, hasAccess, useSubscription } from "@/hooks/useSubscription";
 
 
 export const Route = createFileRoute("/_authenticated")({
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
       throw redirect({ to: "/login" });
+    }
+    // Subscription gate — /subscribe and /account stay reachable so users can pay or sign out.
+    if (location.pathname.startsWith("/subscribe") || location.pathname.startsWith("/account")) return;
+    const sub = await fetchSubscriber().catch(() => null);
+    if (!hasAccess(sub)) {
+      throw redirect({ to: "/subscribe" });
     }
   },
   component: AuthenticatedLayout,
@@ -25,12 +32,14 @@ const nav = [
   { to: "/vaccines", label: "Vaccines", icon: Syringe },
 ] as const;
 
+
 function AuthenticatedLayout() {
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const online = useOnlineStatus();
   const { pending } = usePendingSync();
   useAutoSync();
+  const { subscription, trialDaysLeft } = useSubscription();
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -38,6 +47,11 @@ function AuthenticatedLayout() {
   };
 
   const showPill = !online || pending > 0;
+  const showTrialPill =
+    !showPill &&
+    subscription?.status === "trialing" &&
+    trialDaysLeft <= 2 &&
+    !pathname.startsWith("/subscribe");
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,6 +72,18 @@ function AuthenticatedLayout() {
               : "Offline · entries save locally"}
         </div>
       )}
+      {showTrialPill && (
+        <Link
+          to="/subscribe"
+          className="fixed left-1/2 top-3 z-30 -translate-x-1/2 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3.5 py-1.5 text-xs font-medium text-primary shadow-sm"
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          {trialDaysLeft <= 0
+            ? "Trial ended — Subscribe"
+            : `Trial ends in ${trialDaysLeft} ${trialDaysLeft === 1 ? "day" : "days"} — Subscribe`}
+        </Link>
+      )}
+
       <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-border bg-sidebar px-4 py-5 md:flex md:flex-col">
         <Link to="/dashboard" className="flex items-center gap-2 px-2 font-semibold tracking-tight">
 
@@ -86,7 +112,19 @@ function AuthenticatedLayout() {
             );
           })}
         </nav>
-        <div className="mt-auto">
+        <div className="mt-auto space-y-1">
+          <Link
+            to="/account"
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              pathname.startsWith("/account")
+                ? "bg-primary/10 text-primary"
+                : "text-sidebar-foreground hover:bg-sidebar-accent",
+            )}
+          >
+            <UserCog className="h-4 w-4" /> Account
+          </Link>
+
           <Button variant="ghost" className="w-full justify-start gap-3" onClick={signOut}>
             <LogOut className="h-4 w-4" /> Sign out
           </Button>
