@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedVaccinesRouteImport } from './routes/_authenticated/vaccines'
+import { Route as AuthenticatedSubscribeRouteImport } from './routes/_authenticated/subscribe'
 import { Route as AuthenticatedProductionRouteImport } from './routes/_authenticated/production'
 import { Route as AuthenticatedFlocksRouteImport } from './routes/_authenticated/flocks'
 import { Route as AuthenticatedFinanceRouteImport } from './routes/_authenticated/finance'
@@ -36,6 +37,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthenticatedVaccinesRoute = AuthenticatedVaccinesRouteImport.update({
   id: '/vaccines',
   path: '/vaccines',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSubscribeRoute = AuthenticatedSubscribeRouteImport.update({
+  id: '/subscribe',
+  path: '/subscribe',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedProductionRoute = AuthenticatedProductionRouteImport.update({
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/finance': typeof AuthenticatedFinanceRoute
   '/flocks': typeof AuthenticatedFlocksRoute
   '/production': typeof AuthenticatedProductionRoute
+  '/subscribe': typeof AuthenticatedSubscribeRoute
   '/vaccines': typeof AuthenticatedVaccinesRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
 }
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/finance': typeof AuthenticatedFinanceRoute
   '/flocks': typeof AuthenticatedFlocksRoute
   '/production': typeof AuthenticatedProductionRoute
+  '/subscribe': typeof AuthenticatedSubscribeRoute
   '/vaccines': typeof AuthenticatedVaccinesRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
 }
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/_authenticated/finance': typeof AuthenticatedFinanceRoute
   '/_authenticated/flocks': typeof AuthenticatedFlocksRoute
   '/_authenticated/production': typeof AuthenticatedProductionRoute
+  '/_authenticated/subscribe': typeof AuthenticatedSubscribeRoute
   '/_authenticated/vaccines': typeof AuthenticatedVaccinesRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
 }
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/finance'
     | '/flocks'
     | '/production'
+    | '/subscribe'
     | '/vaccines'
     | '/api/public/paystack-webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
     | '/finance'
     | '/flocks'
     | '/production'
+    | '/subscribe'
     | '/vaccines'
     | '/api/public/paystack-webhook'
   id:
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
     | '/_authenticated/finance'
     | '/_authenticated/flocks'
     | '/_authenticated/production'
+    | '/_authenticated/subscribe'
     | '/_authenticated/vaccines'
     | '/api/public/paystack-webhook'
   fileRoutesById: FileRoutesById
@@ -166,6 +178,13 @@ declare module '@tanstack/react-router' {
       path: '/vaccines'
       fullPath: '/vaccines'
       preLoaderRoute: typeof AuthenticatedVaccinesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/subscribe': {
+      id: '/_authenticated/subscribe'
+      path: '/subscribe'
+      fullPath: '/subscribe'
+      preLoaderRoute: typeof AuthenticatedSubscribeRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/production': {
@@ -211,6 +230,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedFinanceRoute: typeof AuthenticatedFinanceRoute
   AuthenticatedFlocksRoute: typeof AuthenticatedFlocksRoute
   AuthenticatedProductionRoute: typeof AuthenticatedProductionRoute
+  AuthenticatedSubscribeRoute: typeof AuthenticatedSubscribeRoute
   AuthenticatedVaccinesRoute: typeof AuthenticatedVaccinesRoute
 }
 
@@ -219,6 +239,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedFinanceRoute: AuthenticatedFinanceRoute,
   AuthenticatedFlocksRoute: AuthenticatedFlocksRoute,
   AuthenticatedProductionRoute: AuthenticatedProductionRoute,
+  AuthenticatedSubscribeRoute: AuthenticatedSubscribeRoute,
   AuthenticatedVaccinesRoute: AuthenticatedVaccinesRoute,
 }
 
