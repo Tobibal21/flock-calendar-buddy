@@ -112,7 +112,19 @@ function AuthenticatedLayout() {
             );
           })}
         </nav>
-        <div className="mt-auto">
+        <div className="mt-auto space-y-1">
+          <Link
+            to="/account"
+            className={cn(
+              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              pathname.startsWith("/account")
+                ? "bg-primary/10 text-primary"
+                : "text-sidebar-foreground hover:bg-sidebar-accent",
+            )}
+          >
+            <UserCog className="h-4 w-4" /> Account
+          </Link>
+
           <Button variant="ghost" className="w-full justify-start gap-3" onClick={signOut}>
             <LogOut className="h-4 w-4" /> Sign out
           </Button>
