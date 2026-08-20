@@ -9,6 +9,7 @@ import { fetchSubscriber, hasAccess, useSubscription } from "@/hooks/useSubscrip
 
 
 export const Route = createFileRoute("/_authenticated")({
+  ssr: false,
   beforeLoad: async ({ location }) => {
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
