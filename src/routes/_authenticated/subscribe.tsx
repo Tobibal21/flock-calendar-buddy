@@ -6,7 +6,7 @@ import { CheckCircle2, CreditCard, Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
-import { paystackInitialize } from "@/lib/paystack.functions";
+import { paystackInitialize, paystackVerifyReference } from "@/lib/paystack.functions";
 import { fetchSubscriber, useSubscription } from "@/hooks/useSubscription";
 
 type Search = { trxref?: string; reference?: string };
