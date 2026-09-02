@@ -6,7 +6,7 @@ import { CheckCircle2, CreditCard, Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
-import { paystackInitialize } from "@/lib/paystack.functions";
+import { paystackInitialize, paystackVerifyReference } from "@/lib/paystack.functions";
 import { fetchSubscriber, useSubscription } from "@/hooks/useSubscription";
 
 type Search = { trxref?: string; reference?: string };
@@ -18,9 +18,9 @@ export const Route = createFileRoute("/_authenticated/subscribe")({
   }),
   head: () => ({
     meta: [
-      { title: "Subscribe — Coopkeeper" },
-      { name: "description", content: "Subscribe to Coopkeeper to keep tracking your flocks, egg production and farm finances." },
-      { property: "og:title", content: "Subscribe — Coopkeeper" },
+      { title: "Subscribe — Flock Keeper" },
+      { name: "description", content: "Subscribe to Flock Keeper to keep tracking your flocks, egg production and farm finances." },
+      { property: "og:title", content: "Subscribe — Flock Keeper" },
       { property: "og:description", content: "Keep your poultry farm records, production charts and vaccine reminders running." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -43,20 +43,43 @@ function SubscribePage() {
   const qc = useQueryClient();
   const { subscription, trialDaysLeft, isLoading } = useSubscription();
   const initialize = useServerFn(paystackInitialize);
+  const verifyReference = useServerFn(paystackVerifyReference);
   const [starting, setStarting] = useState(false);
   const [confirming, setConfirming] = useState(Boolean(trxref || reference));
 
   useEffect(() => {
     if (!trxref && !reference) return;
     let cancelled = false;
+    const ref = reference ?? trxref!;
+    const succeed = () => {
+      qc.invalidateQueries({ queryKey: ["subscription"] });
+      toast.success("Subscription active — welcome back!");
+      navigate({ to: "/dashboard" });
+    };
     (async () => {
+      // Fast path: verify directly with Paystack in case the webhook is late.
+      try {
+        const res = await verifyReference({ data: { reference: ref } });
+        if (cancelled) return;
+        if (res.verified) {
+          succeed();
+          return;
+        }
+        if (res.status === "failed" || res.status === "abandoned") {
+          setConfirming(false);
+          toast.error("Payment wasn't completed — please try again.");
+          return;
+        }
+      } catch {
+        // fall through to polling
+      }
+      if (cancelled) return;
+
       for (let i = 0; i < 10; i++) {
         const sub = await fetchSubscriber().catch(() => null);
         if (cancelled) return;
         if (sub?.status === "active") {
-          qc.invalidateQueries({ queryKey: ["subscription"] });
-          toast.success("Subscription active — welcome back!");
-          navigate({ to: "/dashboard" });
+          succeed();
           return;
         }
         await new Promise((r) => setTimeout(r, 2000));
@@ -67,7 +90,8 @@ function SubscribePage() {
       toast.message("Payment received — activation is taking a moment. Refresh shortly.");
     })();
     return () => { cancelled = true; };
-  }, [trxref, reference, navigate, qc]);
+  }, [trxref, reference, navigate, qc, verifyReference]);
+
 
   const subscribe = async () => {
     setStarting(true);
@@ -107,7 +131,7 @@ function SubscribePage() {
           <p className="mt-2 text-sm text-muted-foreground">
             {confirming
               ? "We're activating your subscription. This usually takes a few seconds."
-              : "Coopkeeper keeps every flock, crate and Naira accounted for — subscribe monthly to keep full access."}
+              : "Flock Keeper keeps every flock, crate and Naira accounted for — subscribe monthly to keep full access."}
           </p>
 
           {!confirming && (
