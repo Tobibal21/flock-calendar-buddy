@@ -3,6 +3,78 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 const PAYSTACK_API = "https://api.paystack.co";
 
+function addMonth(from: Date) {
+  const d = new Date(from);
+  d.setMonth(d.getMonth() + 1);
+  return d.toISOString();
+}
+
+/**
+ * Reconciliation fallback: verifies a Paystack transaction reference directly
+ * and activates the caller's subscription when it succeeded. Used when the
+ * webhook is late, missing or misconfigured.
+ */
+export const paystackVerifyReference = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { reference: string }) => {
+    const ref = typeof data?.reference === "string" ? data.reference.trim() : "";
+    if (!ref) throw new Error("A transaction reference is required");
+    return { reference: ref.slice(0, 200) };
+  })
+  .handler(async ({ data, context }) => {
+    const secret = process.env["PAYSTACK_SECRET_KEY"];
+    if (!secret) {
+      throw new Error(
+        "Payments are not configured yet. Add PAYSTACK_SECRET_KEY and PAYSTACK_PLAN_CODE in project secrets.",
+      );
+    }
+
+    const res = await fetch(
+      `${PAYSTACK_API}/transaction/verify/${encodeURIComponent(data.reference)}`,
+      { headers: { Authorization: `Bearer ${secret}` } },
+    );
+    const body = (await res.json().catch(() => ({}))) as {
+      data?: Record<string, any>;
+      message?: string;
+    };
+    if (!res.ok || !body.data) {
+      console.error("[paystack-verify] verify failed", body.message);
+      throw new Error(body.message ?? "Could not verify the payment. Please try again.");
+    }
+
+    const d = body.data;
+    const status: string = d.status ?? "unknown";
+    if (status !== "success") {
+      console.error("[paystack-verify] reference not successful", data.reference, status);
+      return { verified: false as const, status };
+    }
+
+    const paidAt = d.paid_at ? new Date(d.paid_at) : new Date();
+    const patch: Record<string, unknown> = {
+      status: "active",
+      current_period_end: d.next_payment_date ?? addMonth(paidAt),
+    };
+    const customerCode = d.customer?.customer_code;
+    if (customerCode) patch["paystack_customer_code"] = customerCode;
+    const subscriptionCode = d.subscription_code ?? d.plan_object?.subscription_code;
+    if (subscriptionCode) patch["paystack_subscription_code"] = subscriptionCode;
+    const emailToken = d.email_token ?? d.subscription?.email_token;
+    if (emailToken) patch["paystack_email_token"] = emailToken;
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("subscribers")
+      .update(patch as never)
+      .eq("user_id", context.userId);
+    if (error) {
+      console.error("[paystack-verify] subscriber update failed", error.message);
+      throw new Error("Payment verified but activation failed. Please refresh in a moment.");
+    }
+
+    return { verified: true as const, status: "active" as const };
+  });
+
+
 /**
  * Starts a Paystack subscription checkout for the signed-in user.
  * Returns the hosted `authorization_url` the browser should be sent to.
