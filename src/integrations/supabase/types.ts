@@ -60,11 +60,13 @@ export type Database = {
       }
       flocks: {
         Row: {
+          acquisition_date: string | null
           bird_type: string
           breed: string | null
           created_at: string
           current_count: number
           date_acquired: string
+          flock_type: string | null
           id: string
           initial_count: number
           mortality_count: number
@@ -74,11 +76,13 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          acquisition_date?: string | null
           bird_type?: string
           breed?: string | null
           created_at?: string
           current_count?: number
           date_acquired?: string
+          flock_type?: string | null
           id?: string
           initial_count?: number
           mortality_count?: number
@@ -88,11 +92,13 @@ export type Database = {
           user_id: string
         }
         Update: {
+          acquisition_date?: string | null
           bird_type?: string
           breed?: string | null
           created_at?: string
           current_count?: number
           date_acquired?: string
+          flock_type?: string | null
           id?: string
           initial_count?: number
           mortality_count?: number
