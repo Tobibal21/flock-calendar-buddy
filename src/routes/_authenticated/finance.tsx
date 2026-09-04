@@ -81,10 +81,11 @@ function FinancePage() {
   const [editing, setEditing] = useState<FinanceRow | null>(null);
   const [formType, setFormType] = useState<"income" | "expense">("expense");
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
+  const [formFlockId, setFormFlockId] = useState<string>("all");
 
   const { data: flocks } = useQuery({
     queryKey: ["flocks"],
-    queryFn: async () => (await supabase.from("flocks").select("id,name")).data ?? [],
+    queryFn: async () => (await supabase.from("flocks").select("id,name,flock_type")).data ?? [],
   });
 
   const { data: records } = useQuery({
@@ -116,6 +117,7 @@ function FinancePage() {
   const openDialog = (row?: FinanceRow) => {
     setEditing(row ?? null);
     setFormType((row?.type as "income" | "expense") ?? "expense");
+    setFormFlockId(row?.flock_id ?? "all");
     setOpen(true);
   };
 
@@ -200,7 +202,7 @@ function FinancePage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    const flockId = fd.get("flock_id") as string;
+    const flockId = formFlockId;
     upsert.mutate({
       id: editing?.id,
       payload: {
@@ -214,7 +216,10 @@ function FinancePage() {
     });
   };
 
-  const categories = formType === "income" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
+  const selectedFlock = (flocks ?? []).find((f: any) => f.id === formFlockId) as any;
+  const incomeCategories =
+    selectedFlock?.flock_type === "broilers" ? BROILER_INCOME_CATEGORIES : INCOME_CATEGORIES;
+  const categories = formType === "income" ? incomeCategories : EXPENSE_CATEGORIES;
 
   return (
     <>
@@ -261,7 +266,7 @@ function FinancePage() {
                 <div className="space-y-1.5">
                   <Label>Category</Label>
                   <Select
-                    key={formType}
+                    key={`${formType}-${formFlockId}`}
                     name="category"
                     defaultValue={
                       editing && categories.some((c) => c.value === editing.category)
@@ -287,7 +292,7 @@ function FinancePage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Flock</Label>
-                  <Select name="flock_id" defaultValue={editing?.flock_id ?? "all"}>
+                  <Select value={formFlockId} onValueChange={setFormFlockId}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All flocks</SelectItem>
