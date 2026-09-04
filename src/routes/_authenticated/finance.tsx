@@ -32,6 +32,12 @@ const INCOME_CATEGORIES = [
   { value: "other_income", label: "Other income" },
 ] as const;
 
+// Broiler flocks only sell birds and manure — no egg-related income.
+const BROILER_INCOME_CATEGORIES = [
+  { value: "birds_sold", label: "Birds sold" },
+  { value: "manure_sold", label: "Manure" },
+] as const;
+
 const EXPENSE_CATEGORIES = [
   { value: "feed", label: "Feed" },
   { value: "vaccines_medication", label: "Vaccines & medication" },
