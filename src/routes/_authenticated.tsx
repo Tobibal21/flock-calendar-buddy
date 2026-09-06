@@ -144,6 +144,7 @@ function AuthenticatedLayout() {
             <Link
               key={item.to}
               to={item.to}
+              data-tour={item.tour}
               className={cn(
                 "flex flex-col items-center gap-1 py-2 text-[11px]",
                 active ? "text-primary" : "text-muted-foreground"
