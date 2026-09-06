@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useAutoSync, usePendingSync } from "@/hooks/usePendingSync";
 import { fetchSubscriber, hasAccess, useSubscription } from "@/hooks/useSubscription";
+import { startTour } from "@/hooks/useOnboarding";
 
 
 export const Route = createFileRoute("/_authenticated")({
@@ -26,11 +27,11 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 const nav = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/flocks", label: "Flocks", icon: Bird },
-  { to: "/production", label: "Production", icon: ClipboardList },
-  { to: "/finance", label: "Finance", icon: Wallet },
-  { to: "/vaccines", label: "Vaccines", icon: Syringe },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, tour: "dashboard" },
+  { to: "/flocks", label: "Flocks", icon: Bird, tour: "flocks" },
+  { to: "/production", label: "Production", icon: ClipboardList, tour: "production" },
+  { to: "/finance", label: "Finance", icon: Wallet, tour: "finance" },
+  { to: "/vaccines", label: "Vaccines", icon: Syringe, tour: "vaccines" },
 ] as const;
 
 
@@ -100,6 +101,7 @@ function AuthenticatedLayout() {
               <Link
                 key={item.to}
                 to={item.to}
+                data-tour={item.tour}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   active
@@ -114,6 +116,9 @@ function AuthenticatedLayout() {
           })}
         </nav>
         <div className="mt-auto space-y-1">
+          <Button variant="ghost" className="w-full justify-start gap-3" onClick={() => { navigate({ to: "/dashboard" }); setTimeout(startTour, 200); }}>
+            <Sparkles className="h-4 w-4" /> Take the tour
+          </Button>
           <Link
             to="/account"
             className={cn(
@@ -140,6 +145,7 @@ function AuthenticatedLayout() {
             <Link
               key={item.to}
               to={item.to}
+              data-tour={item.tour}
               className={cn(
                 "flex flex-col items-center gap-1 py-2 text-[11px]",
                 active ? "text-primary" : "text-muted-foreground"

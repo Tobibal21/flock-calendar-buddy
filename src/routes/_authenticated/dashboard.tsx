@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { eggsAsCrateDecimal, formatCrates } from "@/lib/eggs";
+import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -76,6 +77,7 @@ function Dashboard() {
 
   return (
     <>
+      <OnboardingTour />
       <PageHeader
         title="Dashboard"
         subtitle="A snapshot of your farm today."
