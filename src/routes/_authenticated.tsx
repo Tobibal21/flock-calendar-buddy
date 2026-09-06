@@ -100,6 +100,7 @@ function AuthenticatedLayout() {
               <Link
                 key={item.to}
                 to={item.to}
+                data-tour={item.tour}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   active
@@ -114,6 +115,9 @@ function AuthenticatedLayout() {
           })}
         </nav>
         <div className="mt-auto space-y-1">
+          <Button variant="ghost" className="w-full justify-start gap-3" onClick={() => { navigate({ to: "/dashboard" }); setTimeout(startTour, 200); }}>
+            <Sparkles className="h-4 w-4" /> Take the tour
+          </Button>
           <Link
             to="/account"
             className={cn(
