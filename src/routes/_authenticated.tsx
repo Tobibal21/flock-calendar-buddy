@@ -26,11 +26,11 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 const nav = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/flocks", label: "Flocks", icon: Bird },
-  { to: "/production", label: "Production", icon: ClipboardList },
-  { to: "/finance", label: "Finance", icon: Wallet },
-  { to: "/vaccines", label: "Vaccines", icon: Syringe },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, tour: "dashboard" },
+  { to: "/flocks", label: "Flocks", icon: Bird, tour: "flocks" },
+  { to: "/production", label: "Production", icon: ClipboardList, tour: "production" },
+  { to: "/finance", label: "Finance", icon: Wallet, tour: "finance" },
+  { to: "/vaccines", label: "Vaccines", icon: Syringe, tour: "vaccines" },
 ] as const;
 
 
