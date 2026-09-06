@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 import { useAutoSync, usePendingSync } from "@/hooks/usePendingSync";
 import { fetchSubscriber, hasAccess, useSubscription } from "@/hooks/useSubscription";
+import { startTour } from "@/hooks/useOnboarding";
 
 
 export const Route = createFileRoute("/_authenticated")({
