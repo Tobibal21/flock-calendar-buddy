@@ -11,6 +11,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
+import { ServiceWorkerRegistrar } from "@/components/ServiceWorkerRegistrar";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
@@ -69,8 +70,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/ItAmuIDKCabPsXZ6fX59QaLYWkl1/social-images/social-1778872411810-68703.webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/ItAmuIDKCabPsXZ6fX59QaLYWkl1/social-images/social-1778872411810-68703.webp" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "theme-color", content: "#4a6741" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "default" },
+      { name: "apple-mobile-web-app-title", content: "Flock Keeper" },
+      { name: "application-name", content: "Flock Keeper" },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -108,6 +120,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthListener />
+      <ServiceWorkerRegistrar />
       <Outlet />
       <Toaster />
     </QueryClientProvider>
