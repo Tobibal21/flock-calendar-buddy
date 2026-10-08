@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud, UserCog, Sparkles } from "lucide-react";
+import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud, UserCog, Sparkles, Gauge } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -32,6 +32,7 @@ const nav = [
   { to: "/production", label: "Production", icon: ClipboardList, tour: "production" },
   { to: "/finance", label: "Finance", icon: Wallet, tour: "finance" },
   { to: "/vaccines", label: "Vaccines", icon: Syringe, tour: "vaccines" },
+  { to: "/farm-score", label: "Farm Score", icon: Gauge, tour: "farm-score" },
 ] as const;
 
 
@@ -138,7 +139,7 @@ function AuthenticatedLayout() {
       </aside>
 
       {/* Mobile bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-20 grid grid-cols-5 border-t border-border bg-sidebar md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-20 grid grid-cols-6 border-t border-border bg-sidebar md:hidden">
         {nav.map((item) => {
           const active = pathname.startsWith(item.to);
           return (
