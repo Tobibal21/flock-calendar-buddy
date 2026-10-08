@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      farm_scores: {
+        Row: {
+          components: Json
+          computed_at: string
+          flags: Json
+          id: string
+          months_of_records: number
+          score: number | null
+          summary: Json
+          user_id: string
+        }
+        Insert: {
+          components?: Json
+          computed_at?: string
+          flags?: Json
+          id?: string
+          months_of_records?: number
+          score?: number | null
+          summary?: Json
+          user_id: string
+        }
+        Update: {
+          components?: Json
+          computed_at?: string
+          flags?: Json
+          id?: string
+          months_of_records?: number
+          score?: number | null
+          summary?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
       finance_records: {
         Row: {
           amount: number
@@ -207,6 +240,42 @@ export type Database = {
         }
         Relationships: []
       }
+      report_shares: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          label: string | null
+          last_viewed_at: string | null
+          revoked_at: string | null
+          token: string
+          user_id: string
+          view_count: number
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          label?: string | null
+          last_viewed_at?: string | null
+          revoked_at?: string | null
+          token?: string
+          user_id: string
+          view_count?: number
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          label?: string | null
+          last_viewed_at?: string | null
+          revoked_at?: string | null
+          token?: string
+          user_id?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
       subscribers: {
         Row: {
           created_at: string
@@ -295,7 +364,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      compute_farm_score: { Args: { p_user_id: string }; Returns: Json }
+      get_shared_report: { Args: { p_token: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
