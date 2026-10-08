@@ -12,11 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RTokenRouteImport } from './routes/r.$token'
 import { Route as AuthenticatedVaccinesRouteImport } from './routes/_authenticated/vaccines'
 import { Route as AuthenticatedSubscribeRouteImport } from './routes/_authenticated/subscribe'
 import { Route as AuthenticatedProductionRouteImport } from './routes/_authenticated/production'
 import { Route as AuthenticatedFlocksRouteImport } from './routes/_authenticated/flocks'
 import { Route as AuthenticatedFinanceRouteImport } from './routes/_authenticated/finance'
+import { Route as AuthenticatedFarmScoreRouteImport } from './routes/_authenticated/farm-score'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as ApiPublicPaystackWebhookRouteImport } from './routes/api/public/paystack-webhook'
@@ -33,6 +35,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RTokenRoute = RTokenRouteImport.update({
+  id: '/r/$token',
+  path: '/r/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedVaccinesRoute = AuthenticatedVaccinesRouteImport.update({
@@ -60,6 +67,11 @@ const AuthenticatedFinanceRoute = AuthenticatedFinanceRouteImport.update({
   path: '/finance',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedFarmScoreRoute = AuthenticatedFarmScoreRouteImport.update({
+  id: '/farm-score',
+  path: '/farm-score',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -82,11 +94,13 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/account': typeof AuthenticatedAccountRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/farm-score': typeof AuthenticatedFarmScoreRoute
   '/finance': typeof AuthenticatedFinanceRoute
   '/flocks': typeof AuthenticatedFlocksRoute
   '/production': typeof AuthenticatedProductionRoute
   '/subscribe': typeof AuthenticatedSubscribeRoute
   '/vaccines': typeof AuthenticatedVaccinesRoute
+  '/r/$token': typeof RTokenRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -94,11 +108,13 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/account': typeof AuthenticatedAccountRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/farm-score': typeof AuthenticatedFarmScoreRoute
   '/finance': typeof AuthenticatedFinanceRoute
   '/flocks': typeof AuthenticatedFlocksRoute
   '/production': typeof AuthenticatedProductionRoute
   '/subscribe': typeof AuthenticatedSubscribeRoute
   '/vaccines': typeof AuthenticatedVaccinesRoute
+  '/r/$token': typeof RTokenRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
 }
 export interface FileRoutesById {
@@ -108,11 +124,13 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/farm-score': typeof AuthenticatedFarmScoreRoute
   '/_authenticated/finance': typeof AuthenticatedFinanceRoute
   '/_authenticated/flocks': typeof AuthenticatedFlocksRoute
   '/_authenticated/production': typeof AuthenticatedProductionRoute
   '/_authenticated/subscribe': typeof AuthenticatedSubscribeRoute
   '/_authenticated/vaccines': typeof AuthenticatedVaccinesRoute
+  '/r/$token': typeof RTokenRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
 }
 export interface FileRouteTypes {
@@ -122,11 +140,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/account'
     | '/dashboard'
+    | '/farm-score'
     | '/finance'
     | '/flocks'
     | '/production'
     | '/subscribe'
     | '/vaccines'
+    | '/r/$token'
     | '/api/public/paystack-webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -134,11 +154,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/account'
     | '/dashboard'
+    | '/farm-score'
     | '/finance'
     | '/flocks'
     | '/production'
     | '/subscribe'
     | '/vaccines'
+    | '/r/$token'
     | '/api/public/paystack-webhook'
   id:
     | '__root__'
@@ -147,11 +169,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/_authenticated/account'
     | '/_authenticated/dashboard'
+    | '/_authenticated/farm-score'
     | '/_authenticated/finance'
     | '/_authenticated/flocks'
     | '/_authenticated/production'
     | '/_authenticated/subscribe'
     | '/_authenticated/vaccines'
+    | '/r/$token'
     | '/api/public/paystack-webhook'
   fileRoutesById: FileRoutesById
 }
@@ -159,6 +183,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   LoginRoute: typeof LoginRoute
+  RTokenRoute: typeof RTokenRoute
   ApiPublicPaystackWebhookRoute: typeof ApiPublicPaystackWebhookRoute
 }
 
@@ -183,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/r/$token': {
+      id: '/r/$token'
+      path: '/r/$token'
+      fullPath: '/r/$token'
+      preLoaderRoute: typeof RTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/vaccines': {
@@ -220,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFinanceRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/farm-score': {
+      id: '/_authenticated/farm-score'
+      path: '/farm-score'
+      fullPath: '/farm-score'
+      preLoaderRoute: typeof AuthenticatedFarmScoreRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -247,6 +286,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFarmScoreRoute: typeof AuthenticatedFarmScoreRoute
   AuthenticatedFinanceRoute: typeof AuthenticatedFinanceRoute
   AuthenticatedFlocksRoute: typeof AuthenticatedFlocksRoute
   AuthenticatedProductionRoute: typeof AuthenticatedProductionRoute
@@ -257,6 +297,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFarmScoreRoute: AuthenticatedFarmScoreRoute,
   AuthenticatedFinanceRoute: AuthenticatedFinanceRoute,
   AuthenticatedFlocksRoute: AuthenticatedFlocksRoute,
   AuthenticatedProductionRoute: AuthenticatedProductionRoute,
@@ -272,6 +313,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   LoginRoute: LoginRoute,
+  RTokenRoute: RTokenRoute,
   ApiPublicPaystackWebhookRoute: ApiPublicPaystackWebhookRoute,
 }
 export const routeTree = rootRouteImport
