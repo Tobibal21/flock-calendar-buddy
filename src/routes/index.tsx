@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Egg, ClipboardList, Syringe, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { InstallBanner } from "@/components/InstallBanner";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -24,6 +25,9 @@ function Landing() {
         </div>
       </header>
 
+      <div className="mx-auto max-w-6xl px-6 pt-4">
+        <InstallBanner placement="landing" />
+      </div>
       <section className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <div className="max-w-3xl">
           <span className="inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
