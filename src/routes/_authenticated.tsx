@@ -1,5 +1,7 @@
 import { createFileRoute, redirect, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud, UserCog, Sparkles, Gauge } from "lucide-react";
+import { Egg, LayoutDashboard, Bird, ClipboardList, Syringe, Wallet, LogOut, CloudOff, Cloud, UserCog, Sparkles, Gauge, Smartphone } from "lucide-react";
+import { useState } from "react";
+import { InstallGuide } from "@/components/InstallBanner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -43,6 +45,7 @@ function AuthenticatedLayout() {
   const { pending } = usePendingSync();
   useAutoSync();
   const { subscription, trialDaysLeft } = useSubscription();
+  const [installOpen, setInstallOpen] = useState(false);
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -58,6 +61,15 @@ function AuthenticatedLayout() {
 
   return (
     <div className="min-h-screen bg-background">
+      <InstallGuide open={installOpen} onOpenChange={setInstallOpen} />
+      {/* Mobile: permanent install help (sidebar is hidden on small screens) */}
+      <button
+        onClick={() => setInstallOpen(true)}
+        aria-label="How to install"
+        className="fixed right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-muted-foreground shadow-sm md:hidden"
+      >
+        <Smartphone className="h-4 w-4" />
+      </button>
       {showPill && (
         <div
           className={cn(
@@ -119,6 +131,9 @@ function AuthenticatedLayout() {
         <div className="mt-auto space-y-1">
           <Button variant="ghost" className="w-full justify-start gap-3" onClick={() => { navigate({ to: "/dashboard" }); setTimeout(startTour, 200); }}>
             <Sparkles className="h-4 w-4" /> Take the tour
+          </Button>
+          <Button variant="ghost" className="w-full justify-start gap-3" onClick={() => setInstallOpen(true)}>
+            <Smartphone className="h-4 w-4" /> How to install
           </Button>
           <Link
             to="/account"

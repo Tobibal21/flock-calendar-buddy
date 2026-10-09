@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { eggsAsCrateDecimal, formatCrates } from "@/lib/eggs";
 import { OnboardingTour } from "@/components/onboarding/OnboardingTour";
+import { InstallBanner } from "@/components/InstallBanner";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -89,6 +90,7 @@ function Dashboard() {
       />
 
       <div className="px-6 md:px-10 py-6 space-y-6">
+        <InstallBanner placement="app" />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Stat icon={Bird} label="Birds" value={totalBirds.toLocaleString()} hint={`${totalFlocks} flock${totalFlocks === 1 ? "" : "s"}`} />
           <Stat icon={Egg} label="Crates today" value={formatCrates(todayEggs)} />
