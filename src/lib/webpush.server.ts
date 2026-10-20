@@ -6,7 +6,7 @@ import { VAPID_PUBLIC_KEY } from "@/lib/push-config";
 
 const enc = new TextEncoder();
 
-function b64uToBytes(s: string): Uint8Array {
+function b64uToBytes(s: string): Uint8Array<ArrayBuffer> {
   const pad = "=".repeat((4 - (s.length % 4)) % 4);
   const bin = atob((s + pad).replace(/-/g, "+").replace(/_/g, "/"));
   return Uint8Array.from(bin, (c) => c.charCodeAt(0));
@@ -16,13 +16,13 @@ function bytesToB64u(b: Uint8Array): string {
   b.forEach((x) => (s += String.fromCharCode(x)));
   return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
-function concat(...parts: Uint8Array[]): Uint8Array {
+function concat(...parts: Uint8Array<ArrayBuffer>[]): Uint8Array<ArrayBuffer> {
   const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
   let o = 0;
   for (const p of parts) { out.set(p, o); o += p.length; }
   return out;
 }
-async function hkdf(salt: Uint8Array, ikm: Uint8Array, info: Uint8Array, len: number) {
+async function hkdf(salt: Uint8Array<ArrayBuffer>, ikm: Uint8Array<ArrayBuffer>, info: Uint8Array<ArrayBuffer>, len: number) {
   const key = await crypto.subtle.importKey("raw", ikm, "HKDF", false, ["deriveBits"]);
   const bits = await crypto.subtle.deriveBits({ name: "HKDF", hash: "SHA-256", salt, info }, key, len * 8);
   return new Uint8Array(bits);
