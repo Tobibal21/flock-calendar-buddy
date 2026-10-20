@@ -23,10 +23,10 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
     meta: [
-      { title: "Account & Subscription — Coopkeeper" },
-      { name: "description", content: "View your Coopkeeper subscription status, renewal date and manage cancellation." },
-      { property: "og:title", content: "Account & Subscription — Coopkeeper" },
-      { property: "og:description", content: "Manage your Coopkeeper poultry farm subscription." },
+      { title: "Account & Subscription — Flock Keeper" },
+      { name: "description", content: "View your Flock Keeper subscription status, renewal date and manage cancellation." },
+      { property: "og:title", content: "Account & Subscription — Flock Keeper" },
+      { property: "og:description", content: "Manage your Flock Keeper poultry farm subscription." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -67,7 +67,7 @@ function AccountPage() {
 
   return (
     <>
-      <PageHeader title="Account" subtitle="Your Coopkeeper subscription and billing." />
+      <PageHeader title="Account" subtitle="Your Flock Keeper subscription and billing." />
       <div className="px-6 md:px-10 py-6">
         <div className="max-w-xl rounded-2xl border border-border bg-card p-6">
           <div className="flex items-center justify-between gap-3">

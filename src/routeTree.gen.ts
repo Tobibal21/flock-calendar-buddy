@@ -22,6 +22,7 @@ import { Route as AuthenticatedFarmScoreRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 import { Route as ApiPublicPaystackWebhookRouteImport } from './routes/api/public/paystack-webhook'
+import { Route as ApiPublicHooksSendLogRemindersRouteImport } from './routes/api/public/hooks/send-log-reminders'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -88,6 +89,12 @@ const ApiPublicPaystackWebhookRoute =
     path: '/api/public/paystack-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksSendLogRemindersRoute =
+  ApiPublicHooksSendLogRemindersRouteImport.update({
+    id: '/api/public/hooks/send-log-reminders',
+    path: '/api/public/hooks/send-log-reminders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/vaccines': typeof AuthenticatedVaccinesRoute
   '/r/$token': typeof RTokenRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
+  '/api/public/hooks/send-log-reminders': typeof ApiPublicHooksSendLogRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -116,6 +124,7 @@ export interface FileRoutesByTo {
   '/vaccines': typeof AuthenticatedVaccinesRoute
   '/r/$token': typeof RTokenRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
+  '/api/public/hooks/send-log-reminders': typeof ApiPublicHooksSendLogRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,6 +141,7 @@ export interface FileRoutesById {
   '/_authenticated/vaccines': typeof AuthenticatedVaccinesRoute
   '/r/$token': typeof RTokenRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
+  '/api/public/hooks/send-log-reminders': typeof ApiPublicHooksSendLogRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/vaccines'
     | '/r/$token'
     | '/api/public/paystack-webhook'
+    | '/api/public/hooks/send-log-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/vaccines'
     | '/r/$token'
     | '/api/public/paystack-webhook'
+    | '/api/public/hooks/send-log-reminders'
   id:
     | '__root__'
     | '/'
@@ -177,6 +189,7 @@ export interface FileRouteTypes {
     | '/_authenticated/vaccines'
     | '/r/$token'
     | '/api/public/paystack-webhook'
+    | '/api/public/hooks/send-log-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -185,6 +198,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RTokenRoute: typeof RTokenRoute
   ApiPublicPaystackWebhookRoute: typeof ApiPublicPaystackWebhookRoute
+  ApiPublicHooksSendLogRemindersRoute: typeof ApiPublicHooksSendLogRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -280,6 +294,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaystackWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/send-log-reminders': {
+      id: '/api/public/hooks/send-log-reminders'
+      path: '/api/public/hooks/send-log-reminders'
+      fullPath: '/api/public/hooks/send-log-reminders'
+      preLoaderRoute: typeof ApiPublicHooksSendLogRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -315,6 +336,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RTokenRoute: RTokenRoute,
   ApiPublicPaystackWebhookRoute: ApiPublicPaystackWebhookRoute,
+  ApiPublicHooksSendLogRemindersRoute: ApiPublicHooksSendLogRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

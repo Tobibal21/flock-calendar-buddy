@@ -57,7 +57,7 @@ export function ReminderSettings() {
           <h2 className="font-semibold">Daily reminders</h2>
           <p className="text-sm text-muted-foreground">7:00 AM and 6:00 PM, to log your eggs and expenses.</p>
         </div>
-        <Switch checked={on} onCheckedChange={toggle} disabled={busy || !!note && !on && Notification?.permission !== "default"} aria-label="Daily reminders" />
+        <Switch checked={on} onCheckedChange={toggle} disabled={busy || (!!note && !on)} aria-label="Daily reminders" />
       </div>
       {note && <p className="mt-3 text-sm text-muted-foreground">{note}</p>}
       {on && (

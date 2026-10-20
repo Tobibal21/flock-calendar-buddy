@@ -21,7 +21,7 @@ export function buildIcs(events: CalEvent[]) {
   const lines: string[] = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Coopkeeper//Vaccines//EN",
+    "PRODID:-//Flock Keeper//Vaccines//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
   ];

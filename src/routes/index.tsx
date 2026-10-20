@@ -16,7 +16,7 @@ function Landing() {
             <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
               <Egg className="h-4 w-4" />
             </span>
-            Coopkeeper
+            Flock Keeper
           </Link>
           <div className="flex items-center gap-2">
             <Link to="/login"><Button variant="ghost">Sign in</Button></Link>
@@ -68,7 +68,7 @@ function Landing() {
 
       <footer className="border-t border-border/60 mt-12">
         <div className="mx-auto max-w-6xl px-6 py-6 text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Coopkeeper
+          © {new Date().getFullYear()} Flock Keeper
         </div>
       </footer>
     </div>
