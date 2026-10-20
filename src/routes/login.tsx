@@ -81,7 +81,7 @@ function LoginPage() {
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary-foreground text-primary">
             <Egg className="h-4 w-4" />
           </span>
-          Coopkeeper
+          Flock Keeper
         </Link>
         <div>
           <h2 className="text-3xl font-semibold tracking-tight max-w-sm">
@@ -91,7 +91,7 @@ function LoginPage() {
             Log eggs in seconds. Watch your trends. Stay on top of every vaccine.
           </p>
         </div>
-        <p className="text-sm text-primary-foreground/70">© {new Date().getFullYear()} Coopkeeper</p>
+        <p className="text-sm text-primary-foreground/70">© {new Date().getFullYear()} Flock Keeper</p>
       </div>
 
       <div className="flex items-center justify-center p-6">

@@ -3,7 +3,38 @@
    requests, so the app's offline outbox (offline-queue.ts) stays in charge
    of data sync. */
 
-const VERSION = "v1";
+const VERSION = "v2";
+
+/* Daily log reminders (web push). Display only; never touches data sync. */
+self.addEventListener("push", (event) => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch { data = { body: event.data && event.data.text() }; }
+  const title = data.title || "Flock Keeper";
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: data.body || "Time to log today's eggs and expenses.",
+      icon: "/icon-192.png",
+      badge: "/icon-192.png",
+      tag: data.tag || "flockkeeper-reminder",
+      data: { url: data.url || "/production" },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = new URL((event.notification.data && event.notification.data.url) || "/production", self.location.origin).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((wins) => {
+      for (const w of wins) {
+        if (new URL(w.url).origin === self.location.origin && "focus" in w) {
+          return w.focus().then((c) => (c && "navigate" in c ? c.navigate(target) : c));
+        }
+      }
+      return self.clients.openWindow(target);
+    }),
+  );
+});
 const SHELL_CACHE = `flockkeeper-shell-${VERSION}`;
 const ASSET_CACHE = `flockkeeper-assets-${VERSION}`;
 const KEEP = [SHELL_CACHE, ASSET_CACHE];

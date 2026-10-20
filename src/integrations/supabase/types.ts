@@ -240,6 +240,66 @@ export type Database = {
         }
         Relationships: []
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          last_sent_at: string | null
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          last_sent_at?: string | null
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          last_sent_at?: string | null
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reminder_log: {
+        Row: {
+          id: string
+          result: string
+          sent_at: string
+          sent_on: string
+          slot: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          result: string
+          sent_at?: string
+          sent_on?: string
+          slot: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          result?: string
+          sent_at?: string
+          sent_on?: string
+          slot?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       report_shares: {
         Row: {
           created_at: string
@@ -366,6 +426,12 @@ export type Database = {
     Functions: {
       compute_farm_score: { Args: { p_user_id: string }; Returns: Json }
       get_shared_report: { Args: { p_token: string }; Returns: Json }
+      reminder_recipients: {
+        Args: { p_slot: string }
+        Returns: {
+          user_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

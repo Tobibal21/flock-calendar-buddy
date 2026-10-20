@@ -105,7 +105,7 @@ function AuthenticatedLayout() {
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
             <Egg className="h-4 w-4" />
           </span>
-          Coopkeeper
+          Flock Keeper
         </Link>
         <nav className="mt-8 flex flex-col gap-1">
           {nav.map((item) => {
