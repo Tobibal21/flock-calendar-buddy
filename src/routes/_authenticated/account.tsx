@@ -19,6 +19,7 @@ import {
 import { paystackCancel } from "@/lib/paystack.functions";
 import { useSubscription } from "@/hooks/useSubscription";
 import { cn } from "@/lib/utils";
+import { ReminderSettings } from "@/components/ReminderSettings";
 
 export const Route = createFileRoute("/_authenticated/account")({
   head: () => ({
@@ -112,6 +113,9 @@ function AccountPage() {
               </Button>
             )}
           </div>
+        </div>
+        <div className="mt-6">
+          <ReminderSettings />
         </div>
       </div>
 
